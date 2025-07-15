@@ -66,81 +66,14 @@ def measurements(psi):
         
     return EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var
 
-""""
 
-
-def measurements(psi):
-    # Entanglement entropy
-    EE = psi.entanglement_entropy()
-
-    # Local observables
-    Sx = psi.expectation_value("Sx")
-    Sy = psi.expectation_value("Sy")
-    Sz = psi.expectation_value("Sz")
-
-    # System size
-    L = psi.L
-
-    # Correlation matrices (upper triangular only)
-    SxSx_corr = np.zeros((L, L), dtype=complex)
-    SySy_corr = np.zeros((L, L), dtype=complex)
-    SzSz_corr = np.zeros((L, L), dtype=complex)
-
-    # Compute upper triangle correlations and mirror
-    for i in range(L):
-        for j in range(i, L):  # Only i <= j
-            SxSx_corr[i, j] = psi.correlation_function("Sx", "Sx", i, j)
-            SySy_corr[i, j] = psi.correlation_function("Sy", "Sy", i, j)
-            SzSz_corr[i, j] = psi.correlation_function("Sz", "Sz", i, j)
-
-            # Mirror to lower triangle
-            if i != j:
-                SxSx_corr[j, i] = SxSx_corr[i, j]
-                SySy_corr[j, i] = SySy_corr[i, j]
-                SzSz_corr[j, i] = SzSz_corr[i, j]
-
-    print("SxSx_corr:", SxSx_corr)
-    print("SySy_corr:", SySy_corr)
-    print("SzSz_corr:", SzSz_corr)
-
-    # Total <S_alpha^2>
-    Sx2 = np.sum(SxSx_corr)
-    Sy2 = np.sum(SySy_corr)
-    Sz2 = np.sum(SzSz_corr)
-
-    # Total <S_alpha>
-    Sx_total = np.sum(Sx)
-    Sy_total = np.sum(Sy)
-    Sz_total = np.sum(Sz)
-
-    # Variances: Var(S_alpha) = <S_alpha^2> - <S_alpha>^2
-    Sx_var = np.real_if_close(Sx2 - Sx_total**2)
-    Sy_var = np.real_if_close(Sy2 - Sy_total**2)
-    Sz_var = np.real_if_close(Sz2 - Sz_total**2)
-    Sp_var = Sx_var + Sy_var + Sz_total
-
-    
-    Sx = np.real_if_close(Sx)
-    Sy = np.real_if_close(Sy)
-    Sz = np.real_if_close(Sz)
-    SxSx_corr = np.real_if_close(SxSx_corr)
-    SySy_corr = np.real_if_close(SySy_corr)
-    SzSz_corr = np.real_if_close(SzSz_corr)
-    Sx_var = np.real_if_close(Sx_var)
-    Sy_var = np.real_if_close(Sy_var)
-    Sz_var = np.real_if_close(Sz_var)
-
-    return EE, Sx, Sy, Sz, SxSx_corr, SySy_corr, SzSz_corr, Sx_var/L, Sy_var/L, Sz_var/L, Sp_var/L
-"""
-
-
-def write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, Jz, hz, path ):
+def write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, Jxx, hz, path ):
 
     ensure_dir(path+"/observables/")
     ensure_dir(path+"/mps/")
 
     data = {"psi": psi}
-    with h5py.File(path+"/mps/psi_Lx_%d_Ly_%d_Jz_%.2f_hz_%.2f.h5" % (Lx, Ly, Jz, hz), 'w') as f:
+    with h5py.File(path+"/mps/psi_Lx_%d_Ly_%d_Jxx_%.2f_hz_%.2f.h5" % (Lx, Ly, Jxx, hz), 'w') as f:
         hdf5_io.save_to_hdf5(f, data)
 
     file_EE = open(path+"/observables/EE.txt","a", 1)    
@@ -148,10 +81,10 @@ def write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, 
     file_Sy = open(path+"/observables/Sy.txt","a", 1)
     file_Sz = open(path+"/observables/Sz.txt","a", 1)
         
-    file_EE.write(f"{Jz} {hz}  {'  '.join(map(str, EE))}\n")
-    file_Sx.write(f"{Jz} {hz}  {'  '.join(map(str, Sx))}\n")
-    file_Sy.write(f"{Jz} {hz}  {'  '.join(map(str, Sy))}\n")
-    file_Sz.write(f"{Jz} {hz}  {'  '.join(map(str, Sz))}\n")
+    file_EE.write(f"{Jxx} {hz}  {'  '.join(map(str, EE))}\n")
+    file_Sx.write(f"{Jxx} {hz}  {'  '.join(map(str, Sx))}\n")
+    file_Sy.write(f"{Jxx} {hz}  {'  '.join(map(str, Sy))}\n")
+    file_Sz.write(f"{Jxx} {hz}  {'  '.join(map(str, Sz))}\n")
     
     file_EE.close()
     file_Sx.close()
@@ -160,7 +93,7 @@ def write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, 
     
     #
     file = open(path+"/observables.txt","a", 1)    
-    file.write(f"{Jz} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {Sx_var} {Sy_var} {Sz_var} {Sp_var}\n")
+    file.write(f"{Jxx} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {Sx_var} {Sy_var} {Sz_var} {Sp_var}\n")
     file.close()
 
     
@@ -261,4 +194,4 @@ if __name__ == "__main__":
     psi.canonical_form() 
     
     EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var = measurements(psi)
-    write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, Jz, hz, path )
+    write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, Jxx, hz, path )
