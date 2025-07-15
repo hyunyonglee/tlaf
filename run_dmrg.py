@@ -166,7 +166,14 @@ if __name__ == "__main__":
     TLAF_model = model.TLAF(model_params)
 
     # initial state
-    product_state = [init_state] * (Lx * Ly)
+    if init_state == '+Sx':
+        product_state = []
+        local_state = np.array( [1., 1.] )
+        for i in range( 0, Lx*Ly):
+            product_state.append(local_state)
+    else:
+        product_state = [init_state] * (Lx * Ly)
+        
     psi = MPS.from_product_state(TLAF_model.lat.mps_sites(), product_state, bc=TLAF_model.lat.bc_MPS)
 
     if RM == 'random':

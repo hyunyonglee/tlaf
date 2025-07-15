@@ -3,7 +3,7 @@
 from tenpy.models.lattice import Triangular
 from tenpy.models.model import CouplingModel, MPOModel
 from tenpy.tools.params import Config
-from tenpy.networks.site import SpinSite
+from tenpy.networks.site import SpinHalfSite
 import numpy as np
 __all__ = ['TLAF']
 
@@ -23,7 +23,7 @@ class TLAF(CouplingModel,MPOModel):
         bc_MPS = model_params.get('bc_MPS', 'finite')
         bc = model_params.get('bc', 'periodic')
         
-        site = SpinSite( S=0.5, conserve=None, sort_charge=None )
+        site = SpinHalfSite( conserve=None )
         lat = Triangular( Lx=Lx, Ly=Ly, site=site, bc=bc, bc_MPS=bc_MPS )
         CouplingModel.__init__(self, lat)
 
