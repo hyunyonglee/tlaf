@@ -167,10 +167,25 @@ if __name__ == "__main__":
 
     # initial state
     if init_state == '+Sx':
+        
         product_state = []
         local_state = np.array( [1., 1.] )
         for i in range( 0, Lx*Ly):
             product_state.append(local_state)
+
+    elif init_state == 'uud':
+        
+        product_state = []
+        for x in range(Lx):
+            for y in range(Ly):
+                # Shift pattern for each row (3-row periodicity)
+                phase_shift = x % 3
+                idx = (y - phase_shift) % 3
+                if idx in [0, 1]:  # U U
+                    product_state.append("up")
+                else:              # D
+                    product_state.append("down")
+
     else:
         product_state = [init_state] * (Lx * Ly)
         
