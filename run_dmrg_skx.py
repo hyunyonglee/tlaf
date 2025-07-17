@@ -71,13 +71,13 @@ def measurements(psi, Lx, Ly):
     return EE, Sx, Sy, Sz, chis
 
 
-def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, hz, path ):
+def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, hz, path ):
 
     ensure_dir(path+"/observables/")
     ensure_dir(path+"/mps/")
 
     data = {"psi": psi}
-    with h5py.File(path+"/mps/psi_Lx_%d_Ly_%d_Jxx_%.2f_hz_%.2f.h5" % (Lx, Ly, Jxx, hz), 'w') as f:
+    with h5py.File(path+"/mps/psi_Lx_%d_Ly_%d_Jxx_%.2f_G_%.2f_hz_%.2f.h5" % (Lx, Ly, Jxx, G, hz), 'w') as f:
         hdf5_io.save_to_hdf5(f, data)
 
     file_EE = open(path+"/observables/EE.txt","a", 1)    
@@ -86,11 +86,11 @@ def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, hz, path ):
     file_Sz = open(path+"/observables/Sz.txt","a", 1)
     file_chis = open(path+"/observables/chis.txt","a", 1)
         
-    file_EE.write(f"{Jxx} {hz}  {'  '.join(map(str, EE))}\n")
-    file_Sx.write(f"{Jxx} {hz}  {'  '.join(map(str, Sx))}\n")
-    file_Sy.write(f"{Jxx} {hz}  {'  '.join(map(str, Sy))}\n")
-    file_Sz.write(f"{Jxx} {hz}  {'  '.join(map(str, Sz))}\n")
-    file_chis.write(f"{Jxx} {hz}  {'  '.join(map(str, chis))}\n")
+    file_EE.write(f"{Jxx} {G} {hz}  {'  '.join(map(str, EE))}\n")
+    file_Sx.write(f"{Jxx} {G} {hz}  {'  '.join(map(str, Sx))}\n")
+    file_Sy.write(f"{Jxx} {G} {hz}  {'  '.join(map(str, Sy))}\n")
+    file_Sz.write(f"{Jxx} {G} {hz}  {'  '.join(map(str, Sz))}\n")
+    file_chis.write(f"{Jxx} {G} {hz}  {'  '.join(map(str, chis))}\n")
     
     file_EE.close()
     file_Sx.close()
@@ -100,7 +100,7 @@ def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, hz, path ):
     
     #
     file = open(path+"/observables.txt","a", 1)    
-    file.write(f"{Jxx} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {np.mean(chis)/np.pi} \n")
+    file.write(f"{Jxx} {G} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {np.mean(chis)} \n")
     file.close()
 
     
@@ -225,4 +225,4 @@ if __name__ == "__main__":
     psi.canonical_form() 
     
     EE, Sx, Sy, Sz, chis = measurements(psi, Lx, Ly)
-    write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, hz, path )
+    write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, hz, path )
