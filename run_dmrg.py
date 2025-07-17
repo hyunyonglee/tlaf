@@ -39,20 +39,20 @@ def measurements(psi):
     for i in range(L):
         for j in range(i, L):
             weight = 2.0 if i != j else 1.0  # symmetry factor
-            Sx2 += weight * np.real(
+            Sx2 += weight * np.abs( np.real(
                 psi.expectation_value_term([("Sx", i), ("Sx", j)])
-            )
-            Sy2 += weight * np.real(
+            ))
+            Sy2 += weight * np.abs( np.real(
                 psi.expectation_value_term([("Sy", i), ("Sy", j)])
-            )
-            Sz2 += weight * np.real(
+            ))
+            Sz2 += weight * np.abs( np.real(
                 psi.expectation_value_term([("Sz", i), ("Sz", j)])
-            )
+            ))
             
     # Total <S_alpha>
-    Sx_total = np.sum(Sx)
-    Sy_total = np.sum(Sy)
-    Sz_total = np.sum(Sz)
+    Sx_total = np.sum( np.abs(Sx))
+    Sy_total = np.sum( np.abs(Sy))
+    Sz_total = np.sum( np.abs(Sz))
 
     # Variances: Var(S_alpha) = <S_alpha^2> - <S_alpha>^2
     Sx_var = Sx2 - Sx_total**2
