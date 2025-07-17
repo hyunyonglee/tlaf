@@ -27,6 +27,10 @@ def measurements(psi):
     Sy = psi.expectation_value("Sy")
     Sz = psi.expectation_value("Sz")
     
+    Sx = np.real(Sx)
+    Sy = np.real(Sy)
+    Sz = np.real(Sz)
+        
     # System size
     L = psi.L
 
@@ -60,10 +64,6 @@ def measurements(psi):
     Sz_var = Sz2 - Sz_total**2
     Sp_var = Sx_var + Sy_var + Sz_total
 
-    Sx = np.real(Sx)
-    Sy = np.real(Sy)
-    Sz = np.real(Sz)
-        
     return EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var
 
 
