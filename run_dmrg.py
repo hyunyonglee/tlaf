@@ -81,12 +81,21 @@ def measurements(psi):
     F_Sz = 0.0
 
     SF_Y_OP = 0.0
+    SF_V_OP = 0.0
+    Sz_OP = 0.0
 
     # Loop over i <= j and exploit symmetry
     for i in range(L):
 
         if sublat[i] != 2:
-            SF_Y_OP += np.abs( np.real(Sx[i]) )
+            SF_Y_OP += ((1.)**sublat[i]) * np.real(Sx[i])
+
+        if sublat[i] != 2:
+            SF_V_OP += (-1.) * np.real(Sx[i])
+            Sz_OP += (-1.) * np.real(Sz[i])
+        else:
+            SF_V_OP += np.real(Sx[i])
+            Sz_OP += np.real(Sz[i])
 
         for j in range(i, L):
             weight = 2.0 if i != j else 1.0  # symmetry factor
@@ -94,7 +103,7 @@ def measurements(psi):
             if sublat[i] != 2 and sublat[j] != 2:
             
                 F_SF_Y += weight * np.real( 
-                    (-1.)**(sublat[i] + sublat[j]) *
+                    ((-1.)**(sublat[i] + sublat[j])) *
                     psi.expectation_value_term([("Sx", i), ("Sx", j)])
                 )
 
@@ -118,9 +127,9 @@ def measurements(psi):
                     psi.expectation_value_term([("Sz", i), ("Sz", j)])
                 )
 
-    F_SF_Y = np.abs(F_SF_Y) - SF_Y_OP**2
-    F_SF_V = np.abs(F_SF_V) - np.sum(np.abs(Sx))**2
-    F_Sz = np.abs(F_Sz) - np.sum(np.abs(Sz))**2
+    F_SF_Y = np.abs(F_SF_Y) - np.abs(SF_Y_OP)**2
+    F_SF_V = np.abs(F_SF_V) - np.abs(SF_V_OP)**2
+    F_Sz = np.abs(F_Sz) - np.abs(Sz_OP)**2
 
 
     return EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz
