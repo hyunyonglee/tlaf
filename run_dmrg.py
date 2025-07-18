@@ -31,9 +31,15 @@ def measurements(psi):
     Sy = np.real(Sy)
     Sz = np.real(Sz)
         
+    # Total <S_alpha>
+    Sx_total = np.sum( np.abs(Sx))
+    Sy_total = np.sum( np.abs(Sy))
+    Sz_total = np.sum( np.abs(Sz))
+
     # System size
     L = psi.L
 
+    """
     # Total <S_alpha^2>
     Sx2 = 0.0
     Sy2 = 0.0
@@ -52,12 +58,7 @@ def measurements(psi):
             Sz2 += weight * np.abs( np.real(
                 psi.expectation_value_term([("Sz", i), ("Sz", j)])
             ))
-            
-    # Total <S_alpha>
-    Sx_total = np.sum( np.abs(Sx))
-    Sy_total = np.sum( np.abs(Sy))
-    Sz_total = np.sum( np.abs(Sz))
-
+    
     # Variances: Var(S_alpha) = <S_alpha^2> - <S_alpha>^2
     Sx_var = Sx2 - Sx_total**2
     Sy_var = Sy2 - Sy_total**2
@@ -65,9 +66,68 @@ def measurements(psi):
     Sp_var = Sx_var + Sy_var + Sz_total
 
     return EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var
+    """        
+    
+    sublat = []
+    for x in range(Lx):
+        for y in range(Ly):
+            # Shift pattern for each row (3-row periodicity)
+            phase_shift = x % 3
+            idx = (y - phase_shift) % 3
+            sublat.append(idx)
+
+    F_SF_Y = 0.0
+    F_SF_V = 0.0
+    F_Sz = 0.0
+
+    SF_Y_OP = 0.0
+
+    # Loop over i <= j and exploit symmetry
+    for i in range(L):
+
+        if sublat[i] != 2:
+            SF_Y_OP += np.abs( np.real(Sx[i]) )
+
+        for j in range(i, L):
+            weight = 2.0 if i != j else 1.0  # symmetry factor
+            
+            if sublat[i] != 2 and sublat[j] != 2:
+            
+                F_SF_Y += weight * np.real( 
+                    (-1.)**(sublat[i] + sublat[j]) *
+                    psi.expectation_value_term([("Sx", i), ("Sx", j)])
+                )
+
+            if (sublat[i] == 2) != (sublat[j] == 2): # 둘 중 하나만 2인 경우
+
+                F_SF_V += weight * np.real( 
+                    (-1.) * psi.expectation_value_term([("Sx", i), ("Sx", j)])
+                )
+
+                F_Sz += weight * np.real( 
+                    (-1.) * psi.expectation_value_term([("Sz", i), ("Sz", j)])
+                )
+
+            else:
+
+                F_SF_V += weight * np.real( 
+                    psi.expectation_value_term([("Sx", i), ("Sx", j)])
+                )
+
+                F_Sz += weight * np.real( 
+                    psi.expectation_value_term([("Sz", i), ("Sz", j)])
+                )
+
+    F_SF_Y = np.abs(F_SF_Y) - SF_Y_OP**2
+    F_SF_V = np.abs(F_SF_V) - np.sum(np.abs(Sx))**2
+    F_Sz = np.abs(F_Sz) - np.sum(np.abs(Sz))**2
 
 
-def write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, Jxx, hz, path ):
+    return EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz
+
+
+# def write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, Jxx, hz, path ):
+def write_data( psi, E, EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz, Lx, Ly, Jxx, hz, path ):
 
     ensure_dir(path+"/observables/")
     ensure_dir(path+"/mps/")
@@ -93,7 +153,8 @@ def write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, 
     
     #
     file = open(path+"/observables.txt","a", 1)    
-    file.write(f"{Jxx} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {Sx_var} {Sy_var} {Sz_var} {Sp_var}\n")
+    # file.write(f"{Jxx} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {Sx_var} {Sy_var} {Sz_var} {Sp_var}\n")
+    file.write(f"{Jxx} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {F_SF_Y} {F_SF_V} {F_Sz}\n")
     file.close()
 
     
@@ -215,5 +276,7 @@ if __name__ == "__main__":
     E, psi = eng.run() 
     psi.canonical_form() 
     
-    EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var = measurements(psi)
-    write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, Jxx, hz, path )
+    # EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var = measurements(psi)
+    # write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, Jxx, hz, path )
+    EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz = measurements(psi)
+    write_data( psi, E, EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz, Lx, Ly, Jxx, hz, path )
