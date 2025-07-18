@@ -88,9 +88,9 @@ def measurements(psi):
     for i in range(L):
 
         if sublat[i] != 2:
-            SF_Y_OP += ((1.)**sublat[i]) * np.real(Sx[i])
+            SF_Y_OP += ((-1.)**sublat[i]) * np.real(Sx[i])
 
-        if sublat[i] != 2:
+        if sublat[i] == 2:
             SF_V_OP += (-1.) * np.real(Sx[i])
             Sz_OP += (-1.) * np.real(Sz[i])
         else:
@@ -127,9 +127,9 @@ def measurements(psi):
                     psi.expectation_value_term([("Sz", i), ("Sz", j)])
                 )
 
-    F_SF_Y = np.abs(F_SF_Y) - np.abs(SF_Y_OP)**2
-    F_SF_V = np.abs(F_SF_V) - np.abs(SF_V_OP)**2
-    F_Sz = np.abs(F_Sz) - np.abs(Sz_OP)**2
+    F_SF_Y = np.abs(F_SF_Y) - SF_Y_OP**2
+    F_SF_V = np.abs(F_SF_V) - SF_V_OP**2
+    F_Sz = np.abs(F_Sz) - Sz_OP**2
 
 
     return EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz
