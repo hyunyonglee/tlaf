@@ -132,11 +132,11 @@ def measurements(psi):
     F_Sz = np.abs(F_Sz) - Sz_OP**2
 
 
-    return EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz
+    return EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz, SF_Y_OP, SF_V_OP, Sz_OP
 
 
 # def write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, Jxx, hz, path ):
-def write_data( psi, E, EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz, Lx, Ly, Jxx, hz, path ):
+def write_data( psi, E, EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz, SF_Y_OP, SF_V_OP, Sz_OP, Lx, Ly, Jxx, hz, path ):
 
     ensure_dir(path+"/observables/")
     ensure_dir(path+"/mps/")
@@ -163,7 +163,7 @@ def write_data( psi, E, EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz, Lx, Ly, Jxx, hz, p
     #
     file = open(path+"/observables.txt","a", 1)    
     # file.write(f"{Jxx} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {Sx_var} {Sy_var} {Sz_var} {Sp_var}\n")
-    file.write(f"{Jxx} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {F_SF_Y} {F_SF_V} {F_Sz}\n")
+    file.write(f"{Jxx} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {F_SF_Y} {F_SF_V} {F_Sz} {SF_Y_OP} {SF_V_OP} {Sz_OP}\n")
     file.close()
 
     
@@ -287,5 +287,5 @@ if __name__ == "__main__":
     
     # EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var = measurements(psi)
     # write_data( psi, E, EE, Sx, Sy, Sz, Sx_var, Sy_var, Sz_var, Sp_var, Lx, Ly, Jxx, hz, path )
-    EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz = measurements(psi)
-    write_data( psi, E, EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz, Lx, Ly, Jxx, hz, path )
+    EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz, SF_Y_OP, SF_V_OP, Sz_OP = measurements(psi)
+    write_data( psi, E, EE, Sx, Sy, Sz, F_SF_Y, F_SF_V, F_Sz, SF_Y_OP, SF_V_OP, Sz_OP, Lx, Ly, Jxx, hz, path )
