@@ -20,6 +20,7 @@ class TLAF(CouplingModel,MPOModel):
         Jxx = model_params.get('Jxx', 1.)
         Jz = model_params.get('Jz', 1.)
         G = model_params.get('G', 0.)
+        PD = model_params.get('PD', 0.)
         hz = model_params.get('hz', 0.)
         bc_MPS = model_params.get('bc_MPS', 'finite')
         bc = model_params.get('bc', 'periodic')
@@ -44,16 +45,29 @@ class TLAF(CouplingModel,MPOModel):
                 self.add_coupling( G, u1, 'Sy', u2, 'Sz', dx)
                 self.add_coupling( G, u1, 'Sz', u2, 'Sy', dx)
 
+                self.add_coupling( 2*PD, u1, 'Sx', u2, 'Sx', dx)
+                self.add_coupling( -2*PD, u1, 'Sy', u2, 'Sy', dx)
+
             elif np.all(dx == np.array([-1, 1])):
                 self.add_coupling( G * np.cos(2*np.pi/3.), u1, 'Sy', u2, 'Sz', dx)
                 self.add_coupling( G * np.cos(2*np.pi/3.), u1, 'Sz', u2, 'Sy', dx)
                 self.add_coupling( -G * np.sin(2*np.pi/3.), u1, 'Sx', u2, 'Sz', dx)
                 self.add_coupling( -G * np.sin(2*np.pi/3.), u1, 'Sz', u2, 'Sx', dx)
 
+                self.add_coupling( 2 * PD * np.cos(2*np.pi/3.), u1, 'Sx', u2, 'Sx', dx)
+                self.add_coupling( -2 * PD * np.cos(2*np.pi/3.), u1, 'Sy', u2, 'Sy', dx)
+                self.add_coupling( -2 * PD * np.sin(2*np.pi/3.), u1, 'Sx', u2, 'Sy', dx)
+                self.add_coupling( -2 * PD * np.sin(2*np.pi/3.), u1, 'Sy', u2, 'Sx', dx)
+
             else:
                 self.add_coupling( G * np.cos(2*np.pi/3.), u1, 'Sy', u2, 'Sz', dx)
                 self.add_coupling( G * np.cos(2*np.pi/3.), u1, 'Sz', u2, 'Sy', dx)
                 self.add_coupling( G * np.sin(2*np.pi/3.), u1, 'Sx', u2, 'Sz', dx)
                 self.add_coupling( G * np.sin(2*np.pi/3.), u1, 'Sz', u2, 'Sx', dx)
+
+                self.add_coupling( 2 * PD * np.cos(2*np.pi/3.), u1, 'Sx', u2, 'Sx', dx)
+                self.add_coupling( -2 * PD * np.cos(2*np.pi/3.), u1, 'Sy', u2, 'Sy', dx)
+                self.add_coupling( 2 * PD * np.sin(2*np.pi/3.), u1, 'Sx', u2, 'Sy', dx)
+                self.add_coupling( 2 * PD * np.sin(2*np.pi/3.), u1, 'Sy', u2, 'Sx', dx)
             
         MPOModel.__init__(self, lat, self.calc_H_MPO())
