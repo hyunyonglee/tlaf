@@ -71,14 +71,14 @@ def measurements(psi, Lx, Ly):
     return EE, Sx, Sy, Sz, chis
 
 
-def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, hz, path, wavefunc=False ):
+def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, PD, hz, path, wavefunc=False ):
 
     ensure_dir(path+"/observables/")
     ensure_dir(path+"/mps/")
 
     if wavefunc:
         data = {"psi": psi}
-        with h5py.File(path+"/mps/psi_Lx_%d_Ly_%d_Jxx_%.2f_G_%.2f_hz_%.2f.h5" % (Lx, Ly, Jxx, G, hz), 'w') as f:
+        with h5py.File(path+"/mps/psi_Lx_%d_Ly_%d_Jxx_%.2f_G_%.2f_hz_%.2f.h5" % (Lx, Ly, Jxx, G, PD, hz), 'w') as f:
             hdf5_io.save_to_hdf5(f, data)
 
     file_EE = open(path+"/observables/EE.txt","a", 1)    
@@ -87,11 +87,11 @@ def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, hz, path, wavefunc
     file_Sz = open(path+"/observables/Sz.txt","a", 1)
     file_chis = open(path+"/observables/chis.txt","a", 1)
         
-    file_EE.write(f"{Jxx} {G} {hz}  {'  '.join(map(str, EE))}\n")
-    file_Sx.write(f"{Jxx} {G} {hz}  {'  '.join(map(str, Sx))}\n")
-    file_Sy.write(f"{Jxx} {G} {hz}  {'  '.join(map(str, Sy))}\n")
-    file_Sz.write(f"{Jxx} {G} {hz}  {'  '.join(map(str, Sz))}\n")
-    file_chis.write(f"{Jxx} {G} {hz}  {'  '.join(map(str, chis))}\n")
+    file_EE.write(f"{Jxx} {G} {PD} {hz}  {'  '.join(map(str, EE))}\n")
+    file_Sx.write(f"{Jxx} {G} {PD} {hz}  {'  '.join(map(str, Sx))}\n")
+    file_Sy.write(f"{Jxx} {G} {PD} {hz}  {'  '.join(map(str, Sy))}\n")
+    file_Sz.write(f"{Jxx} {G} {PD} {hz}  {'  '.join(map(str, Sz))}\n")
+    file_chis.write(f"{Jxx} {G} {PD} {hz}  {'  '.join(map(str, chis))}\n")
     
     file_EE.close()
     file_Sx.close()
@@ -101,7 +101,7 @@ def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, hz, path, wavefunc
     
     #
     file = open(path+"/observables.txt","a", 1)    
-    file.write(f"{Jxx} {G} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {np.mean(chis)} \n")
+    file.write(f"{Jxx} {G} {PD} {hz} {E} {np.max(EE)} {np.mean(Sx)} {np.mean(Sy)} {np.mean(Sz)} {np.mean(chis)} \n")
     file.close()
 
     
@@ -134,6 +134,7 @@ if __name__ == "__main__":
     parser.add_argument("--Jxx", default='1.0', help=" nn SxSx + SySy coupling")
     parser.add_argument("--Jz", default='1.0', help=" nn SzSz coupling")
     parser.add_argument("--G", default='0.0', help=" nn Gamma coupling")
+    parser.add_argument("--PD", default='0.0', help=" nn Gamma coupling")
     parser.add_argument("--hz", default='0.0', help="Magnetic field")
     parser.add_argument("--chi", default='100', help="Bond dimension")
     parser.add_argument("--init_state", default='up', help="Initial state")
@@ -150,6 +151,7 @@ if __name__ == "__main__":
     Jxx = float(args.Jxx)
     Jz = float(args.Jz)
     G = float(args.G)
+    PD = float(args.PD)
     hz = float(args.hz)
     chi = int(args.chi)
     init_state = args.init_state
@@ -170,6 +172,7 @@ if __name__ == "__main__":
         "Jxx": Jxx,
         "Jz": Jz,
         "G": G,
+        "PD": PD,
         "hz": hz,
         "bc_MPS": bc_MPS,
         "bc": bc
@@ -227,4 +230,4 @@ if __name__ == "__main__":
     psi.canonical_form() 
     
     EE, Sx, Sy, Sz, chis = measurements(psi, Lx, Ly)
-    write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, hz, path, wavefunc=args.wavefunc )
+    write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, PD, hz, path, wavefunc=args.wavefunc )
