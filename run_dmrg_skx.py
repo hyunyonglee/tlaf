@@ -129,6 +129,7 @@ if __name__ == "__main__":
 
     # parser for command line arguments
     parser=argparse.ArgumentParser()
+    parser.add_argument("--Spin", default='0.5', help="Spin value")
     parser.add_argument("--Lx", default='3', help="Length of cylinder")
     parser.add_argument("--Ly", default='3', help="Circumference of cylinder")
     parser.add_argument("--Jxx", default='1.0', help=" nn SxSx + SySy coupling")
@@ -146,6 +147,7 @@ if __name__ == "__main__":
     args=parser.parse_args()
 
     # parameters
+    S = float(args.Spin)
     Lx = int(args.Lx)
     Ly = int(args.Ly)
     Jxx = float(args.Jxx)
@@ -167,6 +169,7 @@ if __name__ == "__main__":
 
     # model parameters    
     model_params = {
+        "S": S,
         "Lx": Lx,
         "Ly": Ly,
         "Jxx": Jxx,

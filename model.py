@@ -3,7 +3,7 @@
 from tenpy.models.lattice import Triangular
 from tenpy.models.model import CouplingModel, MPOModel
 from tenpy.tools.params import Config
-from tenpy.networks.site import SpinHalfSite
+from tenpy.networks.site import SpinSite
 import numpy as np
 __all__ = ['TLAF']
 
@@ -15,6 +15,7 @@ class TLAF(CouplingModel,MPOModel):
         # 0) read out/set default parameters 
         if not isinstance(model_params, Config):
             model_params = Config(model_params, "TLAF")
+        S = model_params.get('S', 0.5)
         Lx = model_params.get('Lx', 1)
         Ly = model_params.get('Ly', 2)
         Jxx = model_params.get('Jxx', 1.)
@@ -25,7 +26,7 @@ class TLAF(CouplingModel,MPOModel):
         bc_MPS = model_params.get('bc_MPS', 'finite')
         bc = model_params.get('bc', 'periodic')
         
-        site = SpinHalfSite( conserve=None )
+        site = SpinSite( S=S, conserve=None )
         lat = Triangular( Lx=Lx, Ly=Ly, site=site, bc=bc, bc_MPS=bc_MPS )
         CouplingModel.__init__(self, lat)
 
