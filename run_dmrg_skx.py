@@ -218,10 +218,10 @@ if __name__ == "__main__":
     'mixer': True,  # setting this to True helps to escape local minima
     'trunc_params': {
         'chi_max': chi,
-        'svd_min': 1.e-10
+        'svd_min': 1.e-8 # 1.e-10
     },
     'chi_list': { 0: 16, 5: 32, 10: 64, 15: chi },
-    'max_E_err': 1.0e-10,
+    'max_E_err': 1.0e-8, # 1.0e-10,
     # 'max_S_err': 1.0e-9,
     'max_sweeps': max_sweep,
     'combine' : True
