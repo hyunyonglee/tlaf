@@ -206,7 +206,7 @@ if __name__ == "__main__":
     else:
         product_state = [init_state] * (Lx * Ly)
         
-    psi = MPS.from_product_state(TLAF_model.lat.mps_sites(), product_state, bc=TLAF_model.lat.bc_MPS)
+    psi = MPS.from_product_state(TLAF_model.lat.mps_sites(), product_state, dtype=complex, bc=TLAF_model.lat.bc_MPS)
 
     if RM == 'random':
         TEBD_params = {'N_steps': 20, 'trunc_params':{'chi_max': 100}, 'verbose': 0}
