@@ -190,6 +190,12 @@ if __name__ == "__main__":
         for i in range( 0, Lx*Ly):
             product_state.append(local_state)
 
+    elif init_state == '+Sy':
+        product_state = []
+        local_state = np.array([1, 1+1j], dtype=complex)
+        for i in range( 0, Lx*Ly):
+            product_state.append(local_state)
+
     elif init_state == 'uud':
         
         product_state = []
