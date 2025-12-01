@@ -71,7 +71,7 @@ def measurements(psi, Lx, Ly):
     return EE, Sx, Sy, Sz, chis
 
 
-def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, PD, hz, path, wavefunc=False ):
+def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, PD, hz, path; wavefunc=False ):
 
     ensure_dir(path+"/observables/")
     ensure_dir(path+"/mps/")
@@ -245,4 +245,4 @@ if __name__ == "__main__":
     psi.canonical_form() 
     
     EE, Sx, Sy, Sz, chis = measurements(psi, Lx, Ly)
-    write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, PD, hz, path, wavefunc=args.wavefunc )
+    write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, PD, hz, path; wavefunc=args.wavefunc )
