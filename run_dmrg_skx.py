@@ -71,12 +71,13 @@ def measurements(psi, Lx, Ly):
     return EE, Sx, Sy, Sz, chis
 
 
-def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, PD, hz, path; wavefunc=False ):
+def write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, PD, hz, path, wavefunc=False ):
 
     ensure_dir(path+"/observables/")
     ensure_dir(path+"/mps/")
 
     if wavefunc:
+        print("test")
         data = {"psi": psi}
         with h5py.File(path+"/mps/psi_Lx_%d_Ly_%d_Jxx_%.2f_G_%.2f_hz_%.2f.h5" % (Lx, Ly, Jxx, G, PD, hz), 'w') as f:
             hdf5_io.save_to_hdf5(f, data)
@@ -245,4 +246,4 @@ if __name__ == "__main__":
     psi.canonical_form() 
     
     EE, Sx, Sy, Sz, chis = measurements(psi, Lx, Ly)
-    write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, PD, hz, path; wavefunc=args.wavefunc )
+    write_data( psi, E, EE, Sx, Sy, Sz, chis, Lx, Ly, Jxx, G, PD, hz, path, wavefunc=args.wavefunc )
