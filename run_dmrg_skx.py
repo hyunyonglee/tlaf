@@ -229,12 +229,13 @@ if __name__ == "__main__":
                 elif idx == 1:  # U U
                     product_state.append(np.array([1+0.01, -0.01], dtype=complex))
                 else:              # D
-                    product_state.append(np.array([0, 1]))
+                    product_state.append(np.array([0, 1], dtype=complex))
 
     else:
         product_state = [init_state] * (Lx * Ly)
         
     psi = MPS.from_product_state(TLAF_model.lat.mps_sites(), product_state, dtype=complex, bc=TLAF_model.lat.bc_MPS)
+    psi.canonical_form()
 
     if RM == 'random':
         TEBD_params = {'N_steps': 20, 'trunc_params':{'chi_max': 32}, 'verbose': 0}
