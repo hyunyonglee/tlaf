@@ -224,9 +224,9 @@ if __name__ == "__main__":
                 phase_shift = x % 3
                 idx = (y - phase_shift) % 3
                 if idx in [0]:  # U U
-                    product_state.append([2, 1+1j])
+                    product_state.append([1+0.1, 1])
                 elif idx in [1]:  # U U
-                    product_state.append([2, -(1+1j)])
+                    product_state.append([1+0.1, -1])
                 else:              # D
                     product_state.append([0, 1])
 
