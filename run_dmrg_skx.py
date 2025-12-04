@@ -221,7 +221,7 @@ if __name__ == "__main__":
     psi = MPS.from_product_state(TLAF_model.lat.mps_sites(), product_state, dtype=complex, bc=TLAF_model.lat.bc_MPS)
 
     if RM == 'random':
-        TEBD_params = {'N_steps': 20, 'trunc_params':{'chi_max': 100}, 'verbose': 0}
+        TEBD_params = {'N_steps': 20, 'trunc_params':{'chi_max': 32}, 'verbose': 0}
         eng = tebd.RandomUnitaryEvolution(psi, TEBD_params)
         eng.run()
         psi.canonical_form() 
@@ -232,7 +232,7 @@ if __name__ == "__main__":
         'chi_max': chi,
         'svd_min': 1.e-8 # 1.e-10
     },
-    'chi_list': { 0: 16, 5: 32, 10: 64, 15: chi },
+    'chi_list': { 0: 16, 5: 32, 10: 64, 15: 128, 20: chi },
     'max_E_err': 1.0e-8, # 1.0e-10,
     # 'max_S_err': 1.0e-9,
     'max_sweeps': max_sweep,
