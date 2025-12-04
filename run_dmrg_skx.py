@@ -223,14 +223,14 @@ if __name__ == "__main__":
                 # Shift pattern for each row (3-row periodicity)
                 phase_shift = x % 3
                 idx = (y - phase_shift) % 3
-                if idx in [0]:  # U U
+                if idx == 0:  # U U
                     # product_state.append([1, 0])1
-                    product_state.append([1, 0])
-                elif idx in [1]:  # U U
+                    product_state.append(np.array([1, 0]))
+                elif idx == 1:  # U U
                     # product_state.append([1, 0])
-                    product_state.append([1, 0])
+                    product_state.append(np.array([1, 0]))
                 else:              # D
-                    product_state.append([0, 1])
+                    product_state.append(np.array([0, 1]))
 
     else:
         product_state = [init_state] * (Lx * Ly)
