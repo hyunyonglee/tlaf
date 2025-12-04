@@ -227,7 +227,12 @@ if __name__ == "__main__":
         psi.canonical_form() 
 
     dmrg_params = {
-    'mixer': True,  # setting this to True helps to escape local minima
+    'mixer':  dmrg.SubspaceExpansion,
+    'mixer_params': {
+        'amplitude': 1.e-3,
+        'decay': 2.0,
+        'disable_after': 20
+    }, # setting this to True helps to escape local minima
     'trunc_params': {
         'chi_max': chi,
         'svd_min': 1.e-8 # 1.e-10
