@@ -225,9 +225,9 @@ if __name__ == "__main__":
                 idx = (y - phase_shift) % 3
                 if idx == 0:  # U U
                     # product_state.append(np.array([1+0.7, 1]))
-                    product_state.append(np.array([1+0.01, +0.01]))
+                    product_state.append(np.array([1+0.01, +0.01], dtype=complex))
                 elif idx == 1:  # U U
-                    product_state.append(np.array([1+0.01, -0.01]))
+                    product_state.append(np.array([1+0.01, -0.01], dtype=complex))
                 else:              # D
                     product_state.append(np.array([0, 1]))
 
