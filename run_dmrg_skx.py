@@ -143,7 +143,8 @@ if __name__ == "__main__":
     parser.add_argument("--max_sweep", default='50', help="Maximum number of sweeps")
     parser.add_argument("--bc_MPS", default='infinite', help="'finite' or 'infinite' DMRG")
     parser.add_argument("--path", default=current_directory, help="path for saving data")
-    parser.add_argument("--wavefunc", action='store_true', help="Do not save wavefunction")
+    parser.add_argument("--wavefunc", action='store_true', help="Save wavefunction")
+    parser.add_argument("--load", action='store_true', help="Load wavefunction from file")
     args=parser.parse_args()
 
     # parameters
@@ -236,6 +237,17 @@ if __name__ == "__main__":
         
     psi = MPS.from_product_state(TLAF_model.lat.mps_sites(), product_state, dtype=complex, bc=TLAF_model.lat.bc_MPS)
     psi.canonical_form()
+
+    if args.load:
+        if S==0.5:
+            file_path = "/home/hylee/tlaf/reference1.h5"
+        elif S==1.0:
+            file_path = "/home/hylee/tlaf/reference2.h5"
+        
+        with h5py.File(file_path, 'r') as f:
+            data = hdf5_io.load_from_hdf5(f)
+            psi = data["psi"]
+
 
     if RM == 'random':
         TEBD_params = {'N_steps': 20, 'trunc_params':{'chi_max': 32}, 'verbose': 0}

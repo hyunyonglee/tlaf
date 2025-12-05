@@ -20,6 +20,9 @@ __pycache__/
 log
 *log
 
+# h5 files
+*.h5
+
 # test files
 test_*
 
