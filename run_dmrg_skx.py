@@ -251,6 +251,11 @@ if __name__ == "__main__":
             psi = data["psi"]
         print("Wavefunction loaded.")
 
+    # chi list
+    if args.load:
+        chi_list = {0: 256, 10: chi}
+    else:
+        chi_list = {0: 16, 5: 32, 10: 64, 15: 128, 20: chi}
 
     if RM == 'random':
         TEBD_params = {'N_steps': 20, 'trunc_params':{'chi_max': 32}, 'verbose': 0}
@@ -269,7 +274,7 @@ if __name__ == "__main__":
         'chi_max': chi,
         'svd_min': 1.e-8 # 1.e-10
     },
-    'chi_list': { 0: 16, 5: 32, 10: 64, 15: 128, 20: chi },
+    'chi_list': chi_list,
     'max_E_err': 1.0e-8, # 1.0e-10,
     # 'max_S_err': 1.0e-9,
     'max_sweeps': max_sweep,
