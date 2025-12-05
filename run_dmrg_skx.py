@@ -239,6 +239,8 @@ if __name__ == "__main__":
     psi.canonical_form()
 
     if args.load:
+
+        print("Loading wavefunction from file...")
         if S==0.5:
             file_path = "/home/hylee/tlaf/reference1.h5"
         elif S==1.0:
@@ -247,6 +249,7 @@ if __name__ == "__main__":
         with h5py.File(file_path, 'r') as f:
             data = hdf5_io.load_from_hdf5(f)
             psi = data["psi"]
+        print("Wavefunction loaded.")
 
 
     if RM == 'random':
