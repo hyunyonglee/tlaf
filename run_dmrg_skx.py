@@ -253,7 +253,7 @@ if __name__ == "__main__":
 
     # chi list
     if args.load:
-        chi_list = {0: 32, 10: chi}
+        chi_list = {0: 32, 20: chi}
     else:
         chi_list = {0: 16, 5: 32, 10: 64, 15: 128, 20: chi}
 
